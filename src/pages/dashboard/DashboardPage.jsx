@@ -1,10 +1,12 @@
-import { FormAdd as FormAddNew } from '../../components/formAdd/FormAdd'
+import { FormAdd } from '../../components/formAdd/FormAdd.jsx'
+import { Navbar } from '../../components/navbar/Navbar'
 import { useEffect } from 'react'
 import './dashboardPage.css'
 export const DashboardPage = () => {
     return (
         <div>
-            <FormAddNew />
+            <Navbar/>
+            <FormAdd/>
         </div>
     )
 }

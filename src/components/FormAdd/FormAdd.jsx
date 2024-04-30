@@ -21,7 +21,7 @@ const inputs = [
         type: "text"
     }
 ]
-export const FormAdd = ({ settings, saveSettings }) => {
+export const FormAdd = () => {
     const [formState, setFormState] = useState({
         nombreTarea: {
             isValid: "",

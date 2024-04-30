@@ -1,6 +1,6 @@
-import { DasboardPage } from "./components/pages/dashboard";
+import { DashboardPage } from "./pages/dashboard"
 
 const routes =[
-    {path:  '/*', element: <DasboardPage/>}
+    {path:  '/*', element: <DashboardPage/>}
 ]
 export default routes
