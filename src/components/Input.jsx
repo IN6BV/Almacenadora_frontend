@@ -20,7 +20,7 @@ export const Input = ({
             <div>
                 <span>{label}</span>
             </div>
-            {textarea? (
+            {textArea? (
                 <textarea
                     type={type}
                     value={value}

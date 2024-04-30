@@ -1,9 +1,10 @@
-import 
-import './dashBoardPage.css'
-export const DashboardPage = () =>{
-    return(
+import { FormAdd as FormAddNew } from '../../components/formAdd/FormAdd'
+import { useEffect } from 'react'
+import './dashboardPage.css'
+export const DashboardPage = () => {
+    return (
         <div>
-            <FormAdd/>
+            <FormAddNew />
         </div>
     )
 }

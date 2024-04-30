@@ -26,17 +26,17 @@ export const FormAdd = ({ settings, saveSettings }) => {
         nombreTarea: {
             isValid: "",
             showError: false,
-            value: settings.nombreTarea
+            value: ""
         },
         descripcionTarea: {
             isValid: "",
             showError: false,
-            value: settings.descripcionTarea
+            value: ""
         },
         empleadoAsignado: {
             isValid: "",
             showError: false,
-            value: settings.nombreTarea
+            value: ""
         },
 
     })
@@ -53,7 +53,6 @@ const handleInputValidationOnBlur = (value, field) =>{
     let isValid = false;
     switch (field) {
         case "nombreTarea":
-            isValid="";
             break;
         case "descripcionTarea":
             break;
@@ -105,10 +104,12 @@ return (
             <DatePicker/>
             <DatePicker/>
         </div>
-        <div>
+        <div>   
+            <a>Fecha Inicio</a>
             <button onClick={handleFormSubmit} disabled={isSubmitButtonDisabled}>
                 Guardar
             </button>
+            <a>Fecha Finalizacion</a>
             <button>
                 Cancelar
             </button>
