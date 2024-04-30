@@ -1,3 +1,4 @@
+// @ts-ignore
 import { FormAdd } from '../../components/formAdd/FormAdd.jsx'
 import { Navbar } from '../../components/navbar/Navbar'
 import { useEffect } from 'react'
@@ -7,6 +8,7 @@ export const DashboardPage = () => {
         <div>
             <Navbar/>
             <FormAdd/>
+
         </div>
     )
 }
