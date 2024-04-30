@@ -1,0 +1,1 @@
+export {useTarea} from './useTarea.jsx'
