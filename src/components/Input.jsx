@@ -7,7 +7,7 @@ export const Input = ({
     showErrorMessage,
     validationMessage,
     onBlurHandler,
-    textArea,
+    textarea,
 }) =>{
     const handleValueChange = (event) =>{
         onChangeHandler(event.target.value, field)
