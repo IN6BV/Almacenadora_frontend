@@ -1,6 +1,7 @@
 import { useState } from "react"
 import DatePicker from "react-date-picker"
 import { Input } from "../Input"
+
 const inputs = [
     {
         field: "nombreTarea",
