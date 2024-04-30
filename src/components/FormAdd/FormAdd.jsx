@@ -2,41 +2,8 @@ import { useState } from "react"
 import { Input } from "../Input"
 import { useTarea } from "../../shared/hooks"
 
-const inputs = [
-    {
-        field: "nombreTarea",
-        label: "Nombre de la tarea",
-        validationMessage: "El nombre de la tarea es requerido",
-        type: 'text',
-    },
-    {
-        field: "descripcionTarea",
-        label: "Descripcion de la tarea",
-        validationMessage: "La descripcion de la tarea es requerida",
-        type: 'text',
-    },
-    {
-        field: "fechaCreacion",
-        label: "Fecha de inicio de la tarea",
-        validationMessage: "La fecha de inicio de la tarea es requerida",
-        type: 'date',
-    },
-    {
-        field: "fechaFinalizacion",
-        label: "Fecha de finalizacion de la tarea",
-        validationMessage: "La fecha de finalizacion de la tarea es requerida",
-        type: 'date',
-    },
-    {
-        field: "empleadoAsignado",
-        label: "Persona asignada a la tarea",
-        validationMessage: "La persona asignada a la tarea es requerida",
-        type: 'text',
-    }
-]
-
 export const FormAdd = () => {
-    const {agregarTarea, isLoading} = useTarea();
+    const { agregarTarea, isLoading } = useTarea();
 
     const [formState, setFormState] = useState({
         nombreTarea: {
@@ -65,40 +32,33 @@ export const FormAdd = () => {
             showError: false
         }
     });
-    
-    const handleInputValueChange = (field, value) => {
+
+    const handleInputValueChange = (value, field) => {
         setFormState((prevState) => ({
             ...prevState,
             [field]: {
                 ...prevState[field],
                 value
             }
-        }));
+        }))
     }
 
-    const handleInputValidationOnBlur = (field) => {
+    const handleInputValidationOnBlur = (value, field) => {
         let isValid = false;
-
         switch (field) {
             case 'nombreTarea':
-                isValid = formState.nombreTarea.value.trim() !== '';
                 break;
             case 'descripcionTarea':
-                isValid = formState.descripcionTarea.value.trim() !== '';
                 break;
             case 'fechaCreacion':
-                isValid = formState.fechaCreacion.value.trim() !== '';
                 break;
             case 'fechaFinalizacion':
-                isValid = formState.fechaFinalizacion.value.trim() !== '';
                 break;
             case 'empleadoAsignado':
-                isValid = formState.empleadoAsignado.value.trim() !== '';
                 break;
             default:
                 break;
         }
-
         setFormState((prevState) => ({
             ...prevState,
             [field]: {
@@ -109,48 +69,85 @@ export const FormAdd = () => {
         }))
     }
 
-    const handleFormSubmit = async (event) => {
+    const handleAddTask = async (event) => {
         event.preventDefault();
+        const response = await agregarTarea(formState.nombreTarea.value, 
+            formState.descripcionTarea.value, 
+            formState.fechaCreacion.value, 
+            formState.fechaFinalizacion.value, 
+            formState.empleadoAsignado.value);
+        
 
-        const response = await agregarTarea(formState.nombreTarea.value,
-                                            formState.descripcionTarea.value,
-                                            formState.fechaCreacion.value,
-                                            formState.fechaFinalizacion.value, 
-                                            formState.empleadoAsignado.value)
-    window.location.reload();
+        setFormState({
+            nombreTarea: { value: '' },
+            descripcionTarea: { value: '' },
+            fechaCreacion: { value: '' },
+            fechaFinalizacion: { value: '' },
+            empleadoAsignado: { value: '' }
+        });
+
     }
 
     const isSubmitButtonDisabled = isLoading || !formState.nombreTarea.isValid ||
-                                                !formState.descripcionTarea.isValid ||
-                                                !formState.fechaCreacion.isValid ||
+                                                !formState.descripcionTarea.isValid || 
+                                                !formState.fechaCreacion.isValid || 
                                                 !formState.fechaFinalizacion.isValid || 
                                                 !formState.empleadoAsignado.isValid;
 
-return (
-    <form>
-        <div>
-            {inputs.map((input) =>(
+    return (
+        <div >
+            <form>
                 <Input
-                    key={input.field}
-                    field={input.field}
-                    label={input.label}
-                    value={formState[input.field].value}
+                    field='nombreTarea'
+                    label='Nombre tarea'
+                    value={formState.nombreTarea.value}
                     onChangeHandler={handleInputValueChange}
+                    type='text'
                     onBlurHandler={handleInputValidationOnBlur}
-                    showErrorMessage={formState[input.field].showError}
-                    validationMessage={input.validationMessage}
-                    type={input.type}
                 />
-            ))}
+                <Input
+                    field='descripcionTarea'
+                    label='Descripcion tarea'
+                    value={formState.descripcionTarea.value}
+                    onChangeHandler={handleInputValueChange}
+                    type='text'
+                    onBlurHandler={handleInputValidationOnBlur}
+                />
+                <Input
+                    field='fechaCreacion'
+                    label='Fecha de inicio'
+                    value={formState.fechaCreacion.value}
+                    onChangeHandler={handleInputValueChange}
+                    type='date'
+                    onBlurHandler={handleInputValidationOnBlur}
+                />
+                <Input
+                    field='fechaFinalizacion'
+                    label='Fecha de cierre'
+                    value={formState.fechaFinalizacion.value}
+                    onChangeHandler={handleInputValueChange}
+                    type='date'
+                    onBlurHandler={handleInputValidationOnBlur}
+                />
+                <Input
+                    field='empleadoAsignado'
+                    label='Nombre del creador'
+                    value={formState.empleadoAsignado.value}
+                    onChangeHandler={handleInputValueChange}
+                    type='text'
+                    onBlurHandler={handleInputValidationOnBlur}
+                />
+                <br />
+                <br />
+                <div>
+                    <button onClick={handleAddTask} >
+                        Agregar Tarea
+                    </button>
+                    <button onClick={() => window.location.href = '/dashboard'}>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
         </div>
-        <div>   
-            <button onClick={handleFormSubmit} disabled={isSubmitButtonDisabled}>
-                Guardar Tarea
-            </button>
-            <button>
-                Cancelar
-            </button>
-        </div>
-    </form>
-)
+    );
 }
