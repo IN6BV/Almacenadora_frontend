@@ -16,3 +16,25 @@ export const agregarTarea = async (data) => {
     }
 }
 
+export const obtenerTareas = async () => {
+    try {
+        return await api.get('/task')
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const eliminarTarea = async (id) => {
+    try {
+        return await api.delete(`/task/delete/${id}`)
+    } catch (error) {
+        return {
+            error: true,
+            error
+        }
+    }
+}
+

@@ -2,75 +2,20 @@ import React, { useState } from 'react';
 import './taskList.css';
 import { Input } from '../Input';
 
-export const TaskList = () => {
-  const [formState, setFormState] = useState({
-    empleadoAsignado: {
-      value: '',
-      isValid: false,
-      showError: false,
-    },
-    deleteConfirmation: {
-      isOpen: false,
-      taskId: null,
-    },
-  });
+export const TaskList = ({ tareas, onDeleteTask }) => {
+  const [taskIdToDelete, setTaskIdToDelete] = useState('');
 
-  const handleInputValueChange = (value, field) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [field]: {
-        ...prevState[field],
-        value,
-      },
-    }));
+  const handleDeleteClick = (taskId) => {
+    setTaskIdToDelete(taskId);
   };
 
-  const handleInputValidationOnBlur = (value, field) => {
-    let isValid = false;
-    switch (field) {
-      case 'empleadoAsignado':
-        break;
-      default:
-        break;
-    }
-    setFormState((prevState) => ({
-      ...prevState,
-      [field]: {
-        ...prevState[field],
-        isValid,
-        showError: !isValid,
-      },
-    }));
-  };
-  let tareas = [
-    {
-      id: 1,
-      title: 'Ejemplo UwU',
-      descripcion: 'Descripcion de tarea',
-      fechaInicio: '2024-04-30',
-      fechaFinal: '2024-05-10',
-      usuarioEncargado: 'Usuario 1',
-    },
-  ];
-
-  const handleDelete = (id) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      deleteConfirmation: {
-        isOpen: true,
-        taskId: id,
-      },
-    }));
+  const handleConfirmDelete = () => {
+    onDeleteTask(taskIdToDelete);
+    setTaskIdToDelete('');
   };
 
-  const handleCloseModal = () => {
-    setFormState((prevState) => ({
-      ...prevState,
-      deleteConfirmation: {
-        isOpen: false,
-        taskId: null,
-      },
-    }));
+  const handleCancelDelete = () => {
+    setTaskIdToDelete('');
   };
 
   return (
@@ -82,10 +27,7 @@ export const TaskList = () => {
             <Input
               field="empleadoAsignado"
               label="Tareas de un empleado"
-              value={formState.empleadoAsignado.value}
-              onChangeHandler={handleInputValueChange}
               type="text"
-              onBlurHandler={handleInputValidationOnBlur}
             />
             <button type="submit">Buscar</button>
           </form>
@@ -93,59 +35,41 @@ export const TaskList = () => {
         <table className="crud-table">
           <thead>
             <tr className="crud-table__row">
-              <th className="crud-table__header-cell">Id</th>
               <th className="crud-table__header-cell">Titulo Tarea</th>
               <th className="crud-table__header-cell">Descripcion</th>
               <th className="crud-table__header-cell">Fecha Inicio</th>
               <th className="crud-table__header-cell">Fecha Final</th>
+              <th className="crud-table__header-cell">Estado</th>
               <th className="crud-table__header-cell">Usuario Encargado</th>
-              <th className="crud-table__header-cell">Eliminar</th>
+              <th className="crud-table__header-cell">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {tareas.map((tarea) => (
-              <tr key={tarea.id} className="crud-table__row">
-                <td className="crud-table__cell">{tarea.id}</td>
-                <td className="crud-table__cell">{tarea.title}</td>
-                <td className="crud-table__cell">{tarea.descripcion}</td>
-                <td className="crud-table__cell">{tarea.fechaInicio}</td>
-                <td className="crud-table__cell">{tarea.fechaFinal}</td>
-                <td className="crud-table__cell">{tarea.usuarioEncargado}</td>
+            {tareas.map((tarea, index) => (
+              <tr key={index} className="crud-table__row">
+                <td className="crud-table__cell">{tarea.nombreTarea}</td>
+                <td className="crud-table__cell">{tarea.descripcionTarea}</td>
+                <td className="crud-table__cell">{tarea.fechaCreacion}</td>
+                <td className="crud-table__cell">{tarea.fechaFinalizacion}</td>
                 <td className="crud-table__cell">
-                  <button
-                    className="crud-button crud-button--negative"
-                    onClick={() => handleDelete(tarea.id)}
-                  >
-                    Eliminar
-                  </button>
+                  <button>{tarea.estado}</button>
+                </td>
+                <td className="crud-table__cell">{tarea.empleadoAsignado}</td>
+                <td className="crud-table__cell">
+                  <button className='oa' onClick={() => handleDeleteClick(tarea._id)}>Eliminar</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-      {formState.deleteConfirmation.isOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>
-              &times;
-            </span>
-            <p>¿Estás seguro de querer eliminar esta tarea?</p>
-            <button
-              className="crud-button crud-button--negative"
-              onClick={handleCloseModal}
-            >
-              Cancelar
-            </button>
-            <button
-              className="crud-button crud-button--positive"
-              onClick={handleCloseModal}
-            >
-              Eliminar
-            </button>
+        {taskIdToDelete && (
+          <div className="floating-dialog">
+            <p>¿Estás seguro de que deseas eliminar esta tarea?</p>
+            <button onClick={handleConfirmDelete}>Sí</button>
+            <button onClick={handleCancelDelete}>No</button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

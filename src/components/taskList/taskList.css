@@ -105,3 +105,26 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  .oa:active {
+    background-color: red;
+  }
+
+  .floating-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .floating-dialog p {
+    margin-bottom: 10px;
+  }
+  
+  .floating-dialog button {
+    margin-right: 10px;
+  }
