@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { agregarTarea as agregarTareaService } from "../../services";
 import toast from "react-hot-toast";
 
+const reloadPage = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000); 
+};
+
 export const useTarea = () => {
     const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +34,7 @@ export const useTarea = () => {
         }
 
         toast.success('Tarea agregada correctamente');
+        reloadPage();
         navigate('/');
     }
 

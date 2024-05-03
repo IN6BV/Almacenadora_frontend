@@ -1,7 +1,8 @@
-import logo from '../../assets/img/Guardehub.svg'
+import React, { useState } from 'react';
+import logo from '../../assets/img/Guardehub.svg';
 
 const NavLogo = () => {
-    return(
+    return (
         <div className='nav-logo-container'>
             <img
                 src={logo}
@@ -10,34 +11,42 @@ const NavLogo = () => {
                 height='100%'
             />
         </div>
-    )
-}
+    );
+};
 
-const NavButton = ({text, onClickHandler}) => {
-    return(
-        <span onClick={onClickHandler}>
+const NavButton = ({ text, onClickHandler, disabled }) => {
+    return (
+        <span onClick={onClickHandler} className={disabled ? 'disabled' : ''}>
             {text}
         </span>
-    )
-}
+    );
+};
 
-export const Navbar = () => {
-   /* const handleNavigateToTaskComplete = () =>{
-        navigate('/complete')
-    }*/
+const reloadPage = () => {
+      window.location.reload();
+};
 
-       /* const handleNavigateToTaskIncomplete = () =>{
-        navigate('/Incomplete')
-    }*/
+export const Navbar = ({ onChangeFilter, filtroActivo }) => {
+    const [filterType, setFilterType] = useState('');
 
-    return(
+    const handleNavigateToTaskComplete = () => {
+        setFilterType('complete');
+        onChangeFilter('complete');
+    };
+
+    const handleNavigateToTaskIncomplete = () => {
+        setFilterType('incomplete');
+        onChangeFilter('incomplete');
+    };
+
+    return (
         <div className='nav-container'>
-            <NavLogo/>
+            <NavLogo />
             <div className='nav-buttons-container'>
-                <NavButton text='home'/>
-                <NavButton text='task complete' />
-                <NavButton text='task incomplete'  />
+                <NavButton text='Home' onClickHandler={reloadPage} disabled={filtroActivo} />
+                <NavButton text='Tareas completadas' onClickHandler={handleNavigateToTaskComplete} disabled={filtroActivo} />
+                <NavButton text='Tareas incompletas' onClickHandler={handleNavigateToTaskIncomplete} disabled={filtroActivo} />
             </div>
         </div>
-    )
-}
+    );
+};
