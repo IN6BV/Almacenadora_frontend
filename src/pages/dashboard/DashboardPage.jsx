@@ -1,5 +1,4 @@
 import './dashboardPage.css'
-import { TaskList } from '../../components/taskList/TaskList.jsx'
 import { obtenerTareas, eliminarTarea } from '../../services/'
 import { useEffect, useState } from 'react'
 
@@ -38,9 +37,5 @@ export const DashboardPage = () => {
         }
     };
 
-    return (
-        <div>
-            <TaskList tareas={tareas} onDeleteTask={handleDeleteTask} />
-        </div>
-    );
+   
 }
