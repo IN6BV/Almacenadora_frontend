@@ -30,11 +30,32 @@ export const obtenerTareas = async () => {
 export const eliminarTarea = async (id) => {
     try {
         return await api.delete(`/task/delete/${id}`)
-    } catch (error) {
+    } catch (e) {
         return {
             error: true,
-            error
+            e
         }
     }
 }
 
+export const buscarEmpleado = async (empleado) => {
+    try {
+        return await api.post('/task/buscar', { empleadoAsignado: empleado });
+    } catch (e) {
+        return {
+            error: true,
+            e
+        };
+    }
+};
+
+export const actualizarEstadoTarea = async (id, estado) => {
+    try {
+        return await api.put(`/task/updateStatus/${id}`, { estado });
+    } catch (e) {
+        return {
+            error: true,
+            e
+        };
+    }
+}
