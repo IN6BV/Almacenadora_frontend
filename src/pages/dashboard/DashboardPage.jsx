@@ -1,4 +1,6 @@
 import './dashboardPage.css'
+import { TaskList } from '../../components/taskList/TaskList.jsx'
+import { FormEdit } from '../../components/formEdit/FormEdit.jsx'
 import { obtenerTareas, eliminarTarea } from '../../services/'
 import { useEffect, useState } from 'react'
 
@@ -25,7 +27,6 @@ export const DashboardPage = () => {
         try {
             const response = await eliminarTarea(taskId);
             if (!response.error) {
-                // Filtrar las tareas para eliminar la tarea con el ID correspondiente
                 const updatedTasks = tareas.filter(task => task._id !== taskId);
                 setTareas(updatedTasks);
                 console.log('Tarea eliminada correctamente');
@@ -37,5 +38,10 @@ export const DashboardPage = () => {
         }
     };
 
-   
+    return (
+        <div>
+            <TaskList tareas={tareas} onDeleteTask={handleDeleteTask} />
+        </div>
+
+    );
 }

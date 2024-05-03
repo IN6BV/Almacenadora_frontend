@@ -1,10 +1,20 @@
+// TaskList.jsx
 import React, { useState, useEffect } from 'react';
 import './taskList.css';
 import { Input } from '../Input';
 import { actualizarEstadoTarea, buscarEmpleado } from '../../services/api';
+import { FormEdit } from '../formEdit/FormEdit.jsx';
 
 export const TaskList = ({ tareas, onDeleteTask }) => {
   const [taskIdToDelete, setTaskIdToDelete] = useState('');
+  const [tareasFiltradas, setTareasFiltradas] = useState([]);
+  const [tareasOriginales, setTareasOriginales] = useState([]);
+  const [mostrarTablaBusqueda, setMostrarTablaBusqueda] = useState(false);
+  const [mostrarBotonRecargar, setMostrarBotonRecargar] = useState(false);
+  const [mostrarMensajeNoElementos, setMostrarMensajeNoElementos] = useState(false);
+  const [mostrarFormEdit, setMostrarFormEdit] = useState(false);
+  const [formEditData, setFormEditData] = useState(null);
+
   const [formState, setFormState] = useState({
     empleadoAsignado: {
       value: '',
@@ -12,30 +22,38 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
       showError: false
     }
   });
-  const [tareasFiltradas, setTareasFiltradas] = useState([]);
-  const [tareasOriginales, setTareasOriginales] = useState([]);
-  const [mostrarTablaBusqueda, setMostrarTablaBusqueda] = useState(false);
-  const [mostrarBotonRecargar, setMostrarBotonRecargar] = useState(false);
-  const [mostrarMensajeNoElementos, setMostrarMensajeNoElementos] = useState(false);
-
+  
   useEffect(() => {
     setTareasFiltradas(tareas);
     setTareasOriginales(tareas);
   }, [tareas]);
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", { timeZone: "UTC" });
+  };
 
   const handleDeleteClick = (taskId) => {
     setTaskIdToDelete(taskId);
   };
-
+  
   const handleConfirmDelete = () => {
     onDeleteTask(taskIdToDelete);
     setTaskIdToDelete('');
   };
-
+  
   const handleCancelDelete = () => {
     setTaskIdToDelete('');
   };
-
+  
+  const handleRecargar = () => {
+    window.location.reload();
+  };
+  
+  const handleSubmit = (formData) => {
+    console.log("Datos del formulario editado:", formData);
+  };
+  
   const handleInputValueChange = (value, field) => {
     setFormState((prevState) => ({
       ...prevState,
@@ -85,9 +103,6 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
     }
   };
 
-  const handleRecargar = () => {
-    window.location.reload(); 
-  };
 
   const handleEstadoTarea = async (taskId, estadoActual) => {
     try {
@@ -110,108 +125,123 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
     }
   };
 
+  const handleEditClick = (taskId) => {
+    const tareaSeleccionada = tareasOriginales.find(tarea => tarea._id === taskId);
+
+    if (tareaSeleccionada) {
+      setFormEditData(tareaSeleccionada);
+      setMostrarFormEdit(true);
+    } else {
+      console.error('Error: No se pudo encontrar la tarea seleccionada.');
+    }
+  };
+
+
   return (
     <div className="container">
-      <div className="tableContainer">
-        <h2 className="caption">Tareas</h2>
-        <div className="searchForm">
-          <form onSubmit={handleSearch}>
-            <Input
-              field="empleadoAsignado"
-              label="Usuario encargado a buscar:"
-              type="text"
-              value={formState.empleadoAsignado.value}
-              onChangeHandler={handleInputValueChange}
-              onBlurHandler={handleInputValidationOnBlur}
-            />
-            <button type="submit" className='oa'>Buscar</button>
-            {mostrarBotonRecargar && (
-              <button onClick={handleRecargar}>Regresar</button>
-            )}
-          </form>
-        </div>
-        {!mostrarTablaBusqueda && (
-          <table className="crud-table">
-            <thead>
-              <tr className="crud-table__row">
-                <th className="crud-table__header-cell">Titulo Tarea</th>
-                <th className="crud-table__header-cell">Descripcion</th>
-                <th className="crud-table__header-cell">Fecha Inicio</th>
-                <th className="crud-table__header-cell">Fecha Final</th>
-                <th className="crud-table__header-cell">Estado</th>
-                <th className="crud-table__header-cell">Usuario Encargado</th>
-                <th className="crud-table__header-cell">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tareasFiltradas.map((tarea, index) => (
-                <tr key={index} className="crud-table__row">
-                  <td className="crud-table__cell">{tarea.nombreTarea}</td>
-                  <td className="crud-table__cell">{tarea.descripcionTarea}</td>
-                  <td className="crud-table__cell">{new Date(tarea.fechaCreacion).toLocaleDateString()}</td>
-                  <td className="crud-table__cell">{new Date(tarea.fechaFinalizacion).toLocaleDateString()}</td>
-                  <td className="crud-table__cell">
-                    <button onClick={() => handleEstadoTarea(tarea._id, tarea.estado)}>
-                      {tarea.estado ? 'Completada' : 'Incompleta'}
-                    </button>
-                  </td>
-                  <td className="crud-table__cell">{tarea.empleadoAsignado}</td>
-                  <td className="crud-table__cell">
-                    <button className='oa' onClick={() => handleDeleteClick(tarea._id)}>Eliminar</button>
-                    <button className='oa' >Editar</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {taskIdToDelete && (
-          <div className="floating-dialog">
-            <p>¿Estás seguro de que deseas eliminar esta tarea?</p>
-            <button onClick={handleConfirmDelete}>Sí</button>
-            <button onClick={handleCancelDelete}>No</button>
+      {!mostrarFormEdit && (
+        <div className="tableContainer">
+          <h2 className="caption">Tareas</h2>
+          <div className="searchForm">
+            <form onSubmit={handleSearch}>
+              <Input
+                field="empleadoAsignado"
+                label="Usuario encargado a buscar:"
+                type="text"
+                value={formState.empleadoAsignado.value}
+                onChangeHandler={handleInputValueChange}
+                onBlurHandler={handleInputValidationOnBlur}
+              />
+              <button type="submit" className='oa'>Buscar</button>
+              {mostrarBotonRecargar && (
+                <button onClick={handleRecargar}>Regresar</button>
+              )}
+            </form>
           </div>
-        )}
-        {mostrarTablaBusqueda && (
-          <div className="searchResultTable">
-            <h3>Resultados de la búsqueda</h3>
-            <table className="search-result-table">
+          {!mostrarTablaBusqueda && (
+            <table className="crud-table">
               <thead>
-                <tr className="crud-table">
-                  <th className="crud-table__header-cell">Título de la Tarea</th>
-                  <th className="crud-table__header-cell">Descripción</th>
-                  <th className="crud-table__header-cell">Fecha de Inicio</th>
-                  <th className="crud-table__header-cell">Fecha de Finalización</th>
+                <tr className="crud-table__row">
+                  <th className="crud-table__header-cell">Titulo Tarea</th>
+                  <th className="crud-table__header-cell">Descripcion</th>
+                  <th className="crud-table__header-cell">Fecha Inicio</th>
+                  <th className="crud-table__header-cell">Fecha Final</th>
                   <th className="crud-table__header-cell">Estado</th>
                   <th className="crud-table__header-cell">Usuario Encargado</th>
+                  <th className="crud-table__header-cell">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {mostrarMensajeNoElementos ? (
-                  <tr>
-                    <td colSpan="6">No se encontraron elementos.</td>
+                {tareasFiltradas.map((tarea, index) => (
+                  <tr key={index} className="crud-table__row">
+                    <td className="crud-table__cell">{tarea.nombreTarea}</td>
+                    <td className="crud-table__cell">{tarea.descripcionTarea}</td>
+                    <td className="crud-table__cell">{formatDate(tarea.fechaCreacion)}</td>
+                    <td className="crud-table__cell">{formatDate(tarea.fechaFinalizacion)}</td>
+                    <td className="crud-table__cell">
+                      <button onClick={() => handleEstadoTarea(tarea._id, tarea.estado)}>
+                        {tarea.estado ? 'Completada' : 'Incompleta'}
+                      </button>
+                    </td>
+                    <td className="crud-table__cell">{tarea.empleadoAsignado}</td>
+                    <td className="crud-table__cell">
+                      <button className='oa' onClick={() => handleDeleteClick(tarea._id)}>Eliminar</button>
+                      <button className='oa' onClick={() => handleEditClick(tarea._id)}>Editar</button>
+                    </td>
                   </tr>
-                ) : (
-                  tareasFiltradas.map((tarea, index) => (
-                    <tr key={index} className="crud-table__row">
-                      <td className="crud-table__cell">{tarea.nombreTarea}</td>
-                      <td className="crud-table__cell">{tarea.descripcionTarea}</td>
-                      <td className="crud-table__cell">{new Date(tarea.fechaCreacion).toLocaleDateString()}</td>
-                      <td className="crud-table__cell">{new Date(tarea.fechaFinalizacion).toLocaleDateString()}</td>
-                      <td className="crud-table__cell">
-                        <button onClick={() => handleEstadoTarea(tarea._id, tarea.estado)}>
-                          {tarea.estado ? 'Completada' : 'Incompleta'}
-                        </button>
-                      </td>
-                      <td className="crud-table__cell">{tarea.empleadoAsignado}</td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
-          </div>
-        )}
-      </div>
+          )}
+          {taskIdToDelete && (
+            <div className="floating-dialog">
+              <p>¿Estás seguro de que deseas eliminar esta tarea?</p>
+              <button onClick={handleConfirmDelete}>Sí</button>
+              <button onClick={handleCancelDelete}>No</button>
+            </div>
+          )}
+          {mostrarTablaBusqueda && (
+            <div className="searchResultTable">
+              <h3>Resultados de la búsqueda</h3>
+              <table className="search-result-table">
+                <thead>
+                  <tr className="crud-table">
+                    <th className="crud-table__header-cell">Título de la Tarea</th>
+                    <th className="crud-table__header-cell">Descripción</th>
+                    <th className="crud-table__header-cell">Fecha de Inicio</th>
+                    <th className="crud-table__header-cell">Fecha de Finalización</th>
+                    <th className="crud-table__header-cell">Estado</th>
+                    <th className="crud-table__header-cell">Usuario Encargado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mostrarMensajeNoElementos ? (
+                    <tr>
+                      <td colSpan="6">No se encontraron elementos.</td>
+                    </tr>
+                  ) : (
+                    tareasFiltradas.map((tarea, index) => (
+                      <tr key={index} className="crud-table__row">
+                        <td className="crud-table__cell">{tarea.nombreTarea}</td>
+                        <td className="crud-table__cell">{tarea.descripcionTarea}</td>
+                        <td className="crud-table__cell">{formatDate(tarea.fechaCreacion)}</td>
+                        <td className="crud-table__cell">{formatDate(tarea.fechaFinalizacion)}</td>
+                        <td className="crud-table__cell">
+                          <button onClick={() => handleEstadoTarea(tarea._id, tarea.estado)}>
+                            {tarea.estado ? 'Completada' : 'Incompleta'}
+                          </button>
+                        </td>
+                        <td className="crud-table__cell">{tarea.empleadoAsignado}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+      {mostrarFormEdit && <FormEdit initialValues={formEditData} onSubmit={handleSubmit} />}
     </div>
   );
 };

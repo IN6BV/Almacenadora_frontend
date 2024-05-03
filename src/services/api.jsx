@@ -49,6 +49,19 @@ export const buscarEmpleado = async (empleado) => {
     }
 };
 
+export const actualizarTarea = async (id, data) => {
+    try {
+        console.log(id, "idddddd")
+        return await api.put(`/task/update/${id}`, data);
+    } catch (e) {
+        return {
+            error: true,
+            e
+        };
+    }
+
+}
+
 export const actualizarEstadoTarea = async (id, estado) => {
     try {
         return await api.put(`/task/updateStatus/${id}`, { estado });
