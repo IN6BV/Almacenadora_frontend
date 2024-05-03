@@ -19,8 +19,8 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
   const [mostrarMensajeNoElementos, setMostrarMensajeNoElementos] = useState(false);
 
   useEffect(() => {
-    setTareasFiltradas(tareas); // Actualizar tareas filtradas cuando cambia el arreglo de tareas
-    setTareasOriginales(tareas); // Guardar las tareas originales
+    setTareasFiltradas(tareas);
+    setTareasOriginales(tareas);
   }, [tareas]);
 
   const handleDeleteClick = (taskId) => {
@@ -76,7 +76,7 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
         setTareasFiltradas(response.data.tasks);
         setMostrarTablaBusqueda(true);
         setMostrarBotonRecargar(true);
-        setMostrarMensajeNoElementos(response.data.tasks.length === 0); // Mostrar mensaje si no se encuentran elementos
+        setMostrarMensajeNoElementos(response.data.tasks.length === 0);
       } else {
         console.error('Error al buscar empleado:', response.error);
       }
@@ -86,7 +86,7 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
   };
 
   const handleRecargar = () => {
-    window.location.reload(); // Recarga la página
+    window.location.reload(); 
   };
 
   const handleEstadoTarea = async (taskId, estadoActual) => {
@@ -101,9 +101,9 @@ export const TaskList = ({ tareas, onDeleteTask }) => {
         return tarea;
       });
 
-      setTareasFiltradas(nuevasTareas); // Actualizar el estado de las tareas filtradas
+      setTareasFiltradas(nuevasTareas);
 
-      await actualizarEstadoTarea(taskId, !estadoActual); // Actualizar el estado de la tarea en la base de datos
+      await actualizarEstadoTarea(taskId, !estadoActual);
 
     } catch (error) {
       console.error('Error al cambiar estado de la tarea:', error);

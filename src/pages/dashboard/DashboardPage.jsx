@@ -1,4 +1,3 @@
-// @ts-ignore
 import './dashboardPage.css'
 import { TaskList } from '../../components/taskList/TaskList.jsx'
 import { obtenerTareas, eliminarTarea } from '../../services/'
