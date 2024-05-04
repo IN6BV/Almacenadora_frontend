@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './taskList.css';
 import { Input } from '../Input';
 import { actualizarEstadoTarea, buscarEmpleado } from '../../services/api';
-import { FormAdd } from '../formAdd/FormAdd.jsx'; 
+import { FormAdd } from '../FormAdd/FormAdd.jsx'; 
 import { FormEdit } from '../formEdit/FormEdit.jsx';
 
 export const TaskList = ({ tareas, onDeleteTask, filtroActivo }) => {
@@ -23,7 +23,7 @@ export const TaskList = ({ tareas, onDeleteTask, filtroActivo }) => {
       isValid: false,
       showError: false
     }
-  });
+  }); 
 
   useEffect(() => {
     setTareasFiltradas(tareas);
