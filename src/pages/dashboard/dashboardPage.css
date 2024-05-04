@@ -1,31 +1,19 @@
 .dashboard-container {
     width: 100%;
     height: 100vh;
+    background: white;
 }
  
 .nav-container {
-    position: absolute;
     width: 100%;
-    height: 55px;
-    border-bottom: 2px solid rgb(41, 37, 37);
-    box-shadow: 0 0 5px 0 rgb(61, 61, 61);
-    box-sizing: border-box;
-    z-index: 10;
+    height: 60px;
+    border-bottom: 2px solid rgb(249, 232, 232);
+    box-shadow: 0 0 5px 0 rgb(28, 16, 16);
+    background-color: #75a7d8;
     display: flex;
     align-items: center;
 }
  
-.sidebar-container {
-    position: absolute;
-    height: calc(100vh - 50px);
-    top:50px;
-    bottom: 0;
-    left: 0;
-    width: 200px;
-    background-color: #2f2f30;
-    display: flex;
-    flex-direction: column;
-}
  
 .nav-logo-container {
     width: 50px;
@@ -51,8 +39,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 20%;
+    background-color: #80a6db;
+    width: auto;
     margin-left: auto;
+    cursor: pointer;
 }
 
  
